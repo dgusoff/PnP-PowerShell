@@ -1,40 +1,49 @@
 ﻿using Microsoft.SharePoint.Client;
-using OfficeDevPnP.PowerShell.Commands.Base.PipeBinds;
+using SharePointPnP.PowerShell.Commands.Base.PipeBinds;
 using System;
+using System.Linq.Expressions;
 using System.Management.Automation;
-using OfficeDevPnP.PowerShell.CmdletHelpAttributes;
+using SharePointPnP.PowerShell.CmdletHelpAttributes;
+using SharePointPnP.PowerShell.Commands.Base;
+using SharePointPnP.PowerShell.Commands.Extensions;
 
-namespace OfficeDevPnP.PowerShell.Commands
+namespace SharePointPnP.PowerShell.Commands
 {
-    [Cmdlet(VerbsCommon.Get, "SPOWeb")]
+    [Cmdlet(VerbsCommon.Get, "PnPWeb")]
     [CmdletHelp("Returns the current web object",
-        Category = CmdletHelpCategory.Webs)]
-    public class GetWeb : SPOCmdlet
+        Category = CmdletHelpCategory.Webs,
+        OutputType = typeof(Web),
+        OutputTypeLink = "https://msdn.microsoft.com/en-us/library/microsoft.sharepoint.client.web.aspx")]
+    [CmdletExample(
+        Code = @"PS:> Get-PnPWeb",
+        Remarks = "This will return the current web",
+        SortOrder = 1)]
+    public class GetWeb : PnPRetrievalsCmdlet<Web>
     {
-        [Parameter(Mandatory = false, ValueFromPipeline = true, Position=0)]
+        [Parameter(Mandatory = false, ValueFromPipeline = true, Position = 0, HelpMessage = "The guid of the web or web object")]
         public WebPipeBind Identity;
 
         protected override void ExecuteCmdlet()
         {
+            DefaultRetrievalExpressions = new Expression<Func<Web, object>>[] { w => w.Id, w => w.Url, w => w.Title, w => w.ServerRelativeUrl };
             if (Identity == null)
             {
-                ClientContext.Load(ClientContext.Web, w => w.Id, w => w.Url, w => w.Title);
-                ClientContext.ExecuteQueryRetry();
+                ClientContext.Web.EnsureProperties(RetrievalExpressions);
                 WriteObject(ClientContext.Web);
             }
             else
             {
                 if (Identity.Id != Guid.Empty)
                 {
-                    WriteObject(ClientContext.Web.GetWebById(Identity.Id));
+                    WriteObject(ClientContext.Web.GetWebById(Identity.Id, RetrievalExpressions));
                 }
                 else if (Identity.Web != null)
                 {
-                    WriteObject(ClientContext.Web.GetWebById(Identity.Web.Id));
+                    WriteObject(ClientContext.Web.GetWebById(Identity.Web.Id, RetrievalExpressions));
                 }
                 else if (Identity.Url != null)
                 {
-                    WriteObject(ClientContext.Web.GetWebByUrl(Identity.Url));
+                    WriteObject(ClientContext.Web.GetWebByUrl(Identity.Url, RetrievalExpressions));
                 }
             }
         }

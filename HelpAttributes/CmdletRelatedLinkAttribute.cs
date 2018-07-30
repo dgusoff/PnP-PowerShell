@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OfficeDevPnP.PowerShell.CmdletHelpAttributes
+namespace SharePointPnP.PowerShell.CmdletHelpAttributes
 {
+    /// <summary>
+    /// Specify this attribute on a cmdlet class in order to provider additional 'read more' links on the cmdlet help.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class,
                      AllowMultiple = true)]
     public class CmdletRelatedLinkAttribute : Attribute

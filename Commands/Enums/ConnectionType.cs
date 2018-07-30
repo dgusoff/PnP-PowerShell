@@ -1,9 +1,9 @@
-﻿namespace OfficeDevPnP.PowerShell.Commands.Enums
+﻿namespace SharePointPnP.PowerShell.Commands.Enums
 {
     public enum ConnectionType
     {
         OnPrem = 0,
         O365 = 1,
-        TenantAdmin = 2
+        TenantAdmin = 2,
     }
 }

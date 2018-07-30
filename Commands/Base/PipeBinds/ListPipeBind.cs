@@ -1,7 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
 
-namespace OfficeDevPnP.PowerShell.Commands.Base.PipeBinds
+namespace SharePointPnP.PowerShell.Commands.Base.PipeBinds
 {
     public sealed class ListPipeBind
     {
@@ -34,25 +34,18 @@ namespace OfficeDevPnP.PowerShell.Commands.Base.PipeBinds
             }
         }
 
-        public Guid Id
+        public Guid Id => _id;
+
+        public List List => _list;
+
+        public string Title => _name;
+
+        public override string ToString()
         {
-            get { return _id; }
+            return Title ?? Id.ToString();
         }
 
-        public List List
-        {
-            get
-            {
-                return _list;
-            }
-        }
-
-        public string Title
-        {
-            get { return _name; }
-        }
-
-        internal List GetList(Web web)
+        internal List GetList(Web web, params System.Linq.Expressions.Expression<Func<List,object>>[] retrievals)
         {
             List list = null;
             if (List != null)
@@ -73,7 +66,11 @@ namespace OfficeDevPnP.PowerShell.Commands.Base.PipeBinds
             }
             if (list != null)
             {
-                web.Context.Load(list, l => l.Id, l => l.BaseTemplate, l => l.OnQuickLaunch, l => l.DefaultViewUrl, l => l.Title, l => l.Hidden, l => l.ContentTypesEnabled);
+                web.Context.Load(list, l => l.Id, l => l.BaseTemplate, l => l.OnQuickLaunch, l => l.DefaultViewUrl, l => l.Title, l => l.Hidden, l => l.ContentTypesEnabled, l => l.RootFolder.ServerRelativeUrl);
+                if(retrievals != null)
+                {
+                    web.Context.Load(list, retrievals);
+                }
                 web.Context.ExecuteQueryRetry();
             }
             return list;

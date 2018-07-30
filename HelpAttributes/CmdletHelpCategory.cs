@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
-namespace OfficeDevPnP.PowerShell.CmdletHelpAttributes
+namespace SharePointPnP.PowerShell.CmdletHelpAttributes
 {
+    /// <summary>
+    /// The available categories for cmdlet help categorization
+    /// </summary>
     public enum CmdletHelpCategory
     {
         [EnumMember(Value = "Tenant Administration")]
@@ -39,6 +37,23 @@ namespace OfficeDevPnP.PowerShell.CmdletHelpAttributes
         [EnumMember(Value = "Web Parts")]
         WebParts = 19,
         Workflows = 20,
-
+        Provisioning = 21,
+        [EnumMember(Value = "Files and Folders")]
+        Files = 22,
+        [EnumMember(Value = "Microsoft Graph")]
+        Graph = 23,
+        [EnumMember(Value = "SharePoint Recycle Bin")]
+        RecycleBin = 24,
+        [EnumMember(Value = "SharePoint WebHooks")]
+        Webhooks = 25,
+        [EnumMember(Value = "Records Management")]
+        RecordsManagement = 26,
+        [EnumMember(Value = "Client-Side Pages")]
+        ClientSidePages = 27,
+        [EnumMember(Value = "Diagnostic utilites")]
+        Diagnostic = 28,
+        [EnumMember(Value = "Site Designs")]
+        SiteDesigns = 29
+            
     }
 }

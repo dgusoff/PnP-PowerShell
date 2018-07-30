@@ -1,23 +1,34 @@
 ﻿using System;
 using System.Management.Automation;
 using Microsoft.SharePoint.Client;
-using OfficeDevPnP.PowerShell.CmdletHelpAttributes;
-using OfficeDevPnP.PowerShell.Commands.Base.PipeBinds;
-using OfficeDevPnP.PowerShell.Commands.Enums;
+using SharePointPnP.PowerShell.CmdletHelpAttributes;
+using SharePointPnP.PowerShell.Commands.Base.PipeBinds;
+using SharePointPnP.PowerShell.Commands.Enums;
 
-namespace OfficeDevPnP.PowerShell.Commands.Features
+namespace SharePointPnP.PowerShell.Commands.Features
 {
-    [Cmdlet("Disable", "SPOFeature", SupportsShouldProcess = false)]
-    [CmdletHelp("Disables a feature", Category = CmdletHelpCategory.Features)]
-    [CmdletExample(Code = "PS:> Disable-SPOFeature -Identity 99a00f6e-fb81-4dc7-8eac-e09c6f9132fe", SortOrder = 1)]
-    [CmdletExample(Code = "PS:> Disable-SPOFeature -Identity 99a00f6e-fb81-4dc7-8eac-e09c6f9132fe -Force", SortOrder = 2)]
-    [CmdletExample(Code = "PS:> Disable-SPOFeature -Identity 99a00f6e-fb81-4dc7-8eac-e09c6f9132fe -Scope Web", SortOrder = 3)]
-    public class DisableFeature : SPOWebCmdlet
+    [Cmdlet(VerbsLifecycle.Disable, "PnPFeature", SupportsShouldProcess = false)]
+    [CmdletHelp("Disables a feature",
+        "Deactives a feature that was active on a site",
+        Category = CmdletHelpCategory.Features)]
+    [CmdletExample(
+        Code = "PS:> Disable-PnPFeature -Identity 99a00f6e-fb81-4dc7-8eac-e09c6f9132fe",
+        Remarks = @"This will disable the feature with the id ""99a00f6e-fb81-4dc7-8eac-e09c6f9132fe""",
+        SortOrder = 1)]
+    [CmdletExample(
+        Code = "PS:> Disable-PnPFeature -Identity 99a00f6e-fb81-4dc7-8eac-e09c6f9132fe -Force",
+        Remarks = @"This will disable the feature with the id ""99a00f6e-fb81-4dc7-8eac-e09c6f9132fe"" with force.",
+        SortOrder = 2)]
+    [CmdletExample(
+        Code = "PS:> Disable-PnPFeature -Identity 99a00f6e-fb81-4dc7-8eac-e09c6f9132fe -Scope Web",
+        Remarks = @"This will disable the feature with the id ""99a00f6e-fb81-4dc7-8eac-e09c6f9132fe"" with the web scope.",
+        SortOrder = 3)]
+    public class DisableFeature : PnPWebCmdlet
     {
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = ParameterAttribute.AllParameterSets, HelpMessage = "The id of the feature to disable.")]
         public GuidPipeBind Identity;
 
-        [Parameter(Mandatory = false, ParameterSetName = ParameterAttribute.AllParameterSets, HelpMessage = "Forcibly disable the feature.")]
+        [Parameter(Mandatory = false, ParameterSetName = ParameterAttribute.AllParameterSets, HelpMessage = "Specifies whether to continue if an error occurs when deactivating the feature.")]
         public SwitchParameter Force;
 
         [Parameter(Mandatory = false, HelpMessage = "Specify the scope of the feature to deactivate, either Web or Site. Defaults to Web.")]
@@ -29,7 +40,7 @@ namespace OfficeDevPnP.PowerShell.Commands.Features
 
             if (Scope == FeatureScope.Web)
             {
-                this.SelectedWeb.DeactivateFeature(featureId);
+                SelectedWeb.DeactivateFeature(featureId);
             }
             else
             {
